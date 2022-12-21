@@ -4,6 +4,8 @@ import '../Widgets/my_list_tile.dart';
 import '../Model/exam_item.dart';
 import '../Widgets/new_element.dart';
 
+import 'package:intl/intl.dart';
+
 class MainScreen extends StatefulWidget {
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -14,10 +16,10 @@ class _MainScreenState extends State<MainScreen> {
     ExamItem(
         id: "1",
         subject_name: "Algorithams",
-        date: "25.12.2022",
+        date: DateTime.now(),
         time: "12:00"),
     ExamItem(
-        id: "2", subject_name: "Statistic", date: "25.12.2022", time: "09:00"),
+        id: "2", subject_name: "Statistic", date: DateTime.now(), time: "09:00"),
   ];
 
   void _addExamFunction(BuildContext ct) {
@@ -76,10 +78,11 @@ class _MainScreenState extends State<MainScreen> {
                 itemCount: _examItems.length,
                 itemBuilder: (contxt, index) {
                   //print(_examItems[index]);
+                  String formattedDate = DateFormat('yyyy-MM-dd').format(_examItems[index].date);
                   return MyListTile(
                       _examItems[index].id,
                       _examItems[index].subject_name,
-                      _examItems[index].date,
+                      formattedDate ,
                       _examItems[index].time,
                       _deleteItem);
                 },

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:lab3_app/Model/exam_item.dart';
+import '/Model/exam_item.dart';
+import 'package:intl/intl.dart';
 
 class NewElement extends StatefulWidget {
 
@@ -15,8 +16,16 @@ class NewElement extends StatefulWidget {
 class _NewElementState extends State<NewElement> {
 
   final _subjectnameController = TextEditingController();
-  final _dateController = TextEditingController();
+  TextEditingController dateinput = TextEditingController();
   final _timeController = TextEditingController();
+  
+  DateTime ? dateTime;
+
+  @override
+  void initState() {
+    dateinput.text = ""; //set the initial value of text field
+    super.initState();
+  }
 
   late String subject_name;
   late String date;
@@ -27,7 +36,7 @@ class _NewElementState extends State<NewElement> {
       return;
     }
     final enteredName = _subjectnameController.text;
-    final enteredDate = _dateController.text;
+    final enteredDate = dateTime;
     final enteredTime = _timeController.text;
 
     if (enteredDate == null || enteredTime == null){
@@ -54,11 +63,34 @@ class _NewElementState extends State<NewElement> {
               onSubmitted: (_) => _submitData(),
             ),
             TextField(
-              controller: _dateController,
+              controller: dateinput,
               decoration: InputDecoration(
                 labelText: "Date",
               ),
+               readOnly: true,
               //keyboardType: TextInputType.datetime,
+              onTap: () async {
+                DateTime ?pickedDate = await showDatePicker(
+                      context: context, initialDate: DateTime.now(),
+                      firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                      lastDate: DateTime(2101)
+                  );
+                  
+                  if(pickedDate != null ){
+                      print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
+                      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); 
+                      print(formattedDate); //formatted date output using intl package =>  2021-03-16
+                        //you can implement different kind of Date Format here according to your requirement
+
+                      setState(() {
+                        dateinput.text = formattedDate; //set output date to TextField value.
+                        dateTime = pickedDate;
+                      });
+                  }else{
+                      print("Date is not selected");
+                  }
+                },
+              
               onSubmitted: (_) => _submitData(),
             ),
             TextField(
