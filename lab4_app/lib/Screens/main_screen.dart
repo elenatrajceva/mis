@@ -45,7 +45,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _showCalendar(BuildContext context){
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => CalendarScreen()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => MyCalendarPage(_examItems)));
   }
 
   @override

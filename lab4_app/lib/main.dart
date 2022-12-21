@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lab3_app/Screens/calendar_screen.dart';
 import 'Screens/main_screen.dart';
+
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 void main() {
   runApp(MyApp());
