@@ -29,18 +29,22 @@ class _MyCalendarPageState extends State<MyCalendarPage> {
 
   List<Appointment> getExams() {
     List<Appointment> appointment = <Appointment>[];
-    final String name = widget.items.first.subject_name;
-    final DateTime date = DateTime.now();
-    final DateTime startTime = DateTime(date.year, date.month, date.day, 9 , 0 , 0);
-    final DateTime endTime = startTime.add(const Duration(hours: 2)); 
+    
+    for (var item in widget.items) {
+      final String name = item.subject_name;
+      final DateTime date = item.date;
+      final TimeOfDay time = item.time;
+      final DateTime startTime = DateTime(date.year, date.month, date.day, time.hour , time.minute , 0);
+      final DateTime endTime = startTime.add(const Duration(hours: 2));
 
-    appointment.add(Appointment(
+      appointment.add(Appointment(
       startTime: startTime,
       endTime: endTime,
       subject: name,
       color: Colors.blue,
        ));
-
+    }
+  
     return appointment;   
 }
 

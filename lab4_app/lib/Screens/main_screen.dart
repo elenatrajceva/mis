@@ -13,13 +13,16 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   List<ExamItem> _examItems = [
-    ExamItem(
-        id: "1",
-        subject_name: "Algorithams",
-        date: DateTime.now(),
-        time: "12:00"),
-    ExamItem(
-        id: "2", subject_name: "Statistic", date: DateTime.now(), time: "09:00"),
+    // ExamItem(
+    //     id: "1",
+    //     subject_name: "Algorithams",
+    //     date: DateTime(2022,12,25),
+    //     time: TimeOfDay(hour: 23, minute: 30)),
+    // ExamItem(
+    //     id: "2",
+    //     subject_name: "Statistic",
+    //     date: DateTime.now(),
+    //     time: TimeOfDay(hour: 9, minute: 30)),
   ];
 
   void _addExamFunction(BuildContext ct) {
@@ -46,8 +49,9 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  void _showCalendar(BuildContext context){
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => MyCalendarPage(_examItems)));
+  void _showCalendar(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => MyCalendarPage(_examItems)));
   }
 
   @override
@@ -78,12 +82,15 @@ class _MainScreenState extends State<MainScreen> {
                 itemCount: _examItems.length,
                 itemBuilder: (contxt, index) {
                   //print(_examItems[index]);
-                  String formattedDate = DateFormat('yyyy-MM-dd').format(_examItems[index].date);
+                  String formattedDate =
+                      DateFormat('yyyy-MM-dd').format(_examItems[index].date);
+                  DateTime parsedTime = DateFormat.Hm().parse(_examItems[index].time.format(context).toString());
+                  String formattedTime = DateFormat('HH:mm:ss').format(parsedTime); 
                   return MyListTile(
                       _examItems[index].id,
                       _examItems[index].subject_name,
-                      formattedDate ,
-                      _examItems[index].time,
+                      formattedDate,
+                      formattedTime,
                       _deleteItem);
                 },
               ));

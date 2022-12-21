@@ -1,9 +1,11 @@
 
+import 'package:flutter/material.dart';
+
 class ExamItem{
   final String id;
   final String subject_name;
   final DateTime date;
-  final String time;
+  final TimeOfDay time;
 
   ExamItem({
     required this.id, 

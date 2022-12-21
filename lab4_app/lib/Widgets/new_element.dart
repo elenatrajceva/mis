@@ -17,13 +17,15 @@ class _NewElementState extends State<NewElement> {
 
   final _subjectnameController = TextEditingController();
   TextEditingController dateinput = TextEditingController();
-  final _timeController = TextEditingController();
+  TextEditingController timeinput = TextEditingController();
   
   DateTime ? dateTime;
+  TimeOfDay ? timeOfDay;
 
   @override
   void initState() {
     dateinput.text = ""; //set the initial value of text field
+    timeinput.text = ""; //set the initial value of text field
     super.initState();
   }
 
@@ -37,7 +39,7 @@ class _NewElementState extends State<NewElement> {
     }
     final enteredName = _subjectnameController.text;
     final enteredDate = dateTime;
-    final enteredTime = _timeController.text;
+    final enteredTime = timeOfDay;
 
     if (enteredDate == null || enteredTime == null){
       return;
@@ -72,7 +74,7 @@ class _NewElementState extends State<NewElement> {
               onTap: () async {
                 DateTime ?pickedDate = await showDatePicker(
                       context: context, initialDate: DateTime.now(),
-                      firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                      firstDate: DateTime.now(), //DateTime.now() - not to allow to choose before today.
                       lastDate: DateTime(2101)
                   );
                   
@@ -94,10 +96,34 @@ class _NewElementState extends State<NewElement> {
               onSubmitted: (_) => _submitData(),
             ),
             TextField(
-              controller: _timeController,
+              controller: timeinput,
               decoration: InputDecoration(
                 labelText: "Time",
               ),
+              readOnly: true,
+              onTap: () async {
+                  TimeOfDay ?pickedTime =  await showTimePicker(
+                          initialTime: TimeOfDay.now(),
+                          context: context,
+                      );
+                  
+                  if(pickedTime != null ){
+                      print(pickedTime.format(context));   //output 10:51 PM
+                      DateTime parsedTime = DateFormat.Hm().parse(pickedTime.format(context).toString());
+                      //converting to DateTime so that we can further format on different pattern.
+                      print(parsedTime); //output 1970-01-01 22:53:00.000
+                      String formattedTime = DateFormat('HH:mm:ss').format(parsedTime);
+                      print(formattedTime); //output 14:59:00
+                      //DateFormat() is from intl package, you can format the time on any pattern you need.
+
+                      setState(() {
+                        timeinput.text = formattedTime; //set the value of text field. 
+                        timeOfDay = pickedTime;
+                      });
+                  }else{
+                      print("Time is not selected");
+                  }
+                },
               onSubmitted: (_) => _submitData(),
             ),
             TextButton(
