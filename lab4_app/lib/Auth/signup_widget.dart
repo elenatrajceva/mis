@@ -1,25 +1,26 @@
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lab3_app/Auth/utils.dart';
 
 import '../main.dart';
 
-class LoginWidget extends StatefulWidget {
-  final VoidCallback onClickedSignUp;
+class SignUpWidget extends StatefulWidget {
+  final Function() onClickedSignIn;
 
-  const LoginWidget({
+  const SignUpWidget({
     Key? key,
-    required this.onClickedSignUp,
+    required this.onClickedSignIn,
   }) : super(key: key);
 
   @override
-  _LoginWidgetState createState() => _LoginWidgetState();
+  _SignUpWidgetState createState() => _SignUpWidgetState();
 }
 
-class _LoginWidgetState extends State<LoginWidget> {
+class _SignUpWidgetState extends State<SignUpWidget> {
+  final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -34,32 +35,49 @@ class _LoginWidgetState extends State<LoginWidget> {
   Widget build(BuildContext context) => SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child:
-            Column(
+            Form(
+              key: formKey,
+              child: Column(
               mainAxisAlignment: MainAxisAlignment.center, 
               children: [
+                SizedBox(height: 20,),
+                Text(
+                  'Welcome Back',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                ),
                 SizedBox(height: 40,),
-                TextField(
+                TextFormField(
                   controller: emailController,
                   cursorColor: Colors.white,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(labelText: 'Email'),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (email) =>
+                    email != null && !EmailValidator.validate(email)
+                      ? 'Enter a vaild email'
+                      : null,
                 ),
                 SizedBox(height: 4,),
-                TextField(
+                TextFormField(
                   controller: passwordController,
                   textInputAction: TextInputAction.done,
                   decoration: InputDecoration(labelText: "Password"),
                   obscureText: true,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) => value != null && value.length < 6 
+                    ? 'Enter min. 6 characters'
+                    : null, 
                 ),
                 SizedBox(height: 20,),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size.fromHeight(50)
                     ),
-                  onPressed: signIn, 
+                  onPressed: signUp, 
                   icon: Icon(Icons.lock_open, size: 23,), 
                   label: Text(
-                    'Sign in',
+                    'Sign Up',
                     style: TextStyle(fontSize: 24),
                   ),
                   ),
@@ -67,12 +85,12 @@ class _LoginWidgetState extends State<LoginWidget> {
                   RichText(
                     text: TextSpan(
                       style: TextStyle(color: Colors.black),
-                      text: 'No account?  ',
+                      text: 'Already have an account?  ',
                       children: [
                         TextSpan(
                           recognizer: TapGestureRecognizer()
-                            ..onTap = widget.onClickedSignUp,
-                          text: 'Sign Up',
+                            ..onTap = widget.onClickedSignIn,
+                          text: 'Log In',
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                             color: Theme.of(context).colorScheme.background
@@ -82,9 +100,15 @@ class _LoginWidgetState extends State<LoginWidget> {
                     )
                   ),
               ]),
+            )
+            
       );
 
-  Future signIn() async {
+  Future signUp() async {
+
+    final isValid = formKey.currentState!.validate();
+    if (!isValid) return;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -92,13 +116,13 @@ class _LoginWidgetState extends State<LoginWidget> {
     );
 
     try{
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
     );
     } on FirebaseAuthException catch (e){
       print(e);
-      
+
       Utils.showSnackBar(e.message);
     }
 
