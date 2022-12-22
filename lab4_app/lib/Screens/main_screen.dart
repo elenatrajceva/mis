@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../Screens/calendar_screen.dart';
 import '../Widgets/my_list_tile.dart';
 import '../Model/exam_item.dart';
+import '../Widgets/my_profile.dart';
 import '../Widgets/new_element.dart';
 
 import 'package:intl/intl.dart';
@@ -54,6 +55,11 @@ class _MainScreenState extends State<MainScreen> {
         .push(MaterialPageRoute(builder: (_) => MyCalendarPage(_examItems)));
   }
 
+  void _myProfile(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => MyProfile()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +73,10 @@ class _MainScreenState extends State<MainScreen> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () => _addExamFunction(context),
+            ),
+            IconButton(
+              icon: Icon(Icons.supervised_user_circle),
+              onPressed: () => _myProfile(context),
             ),
           ],
         ),
