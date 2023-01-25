@@ -36,7 +36,11 @@ class _MyProfileState extends State<MyProfile> {
               style: ElevatedButton.styleFrom(
                 minimumSize: Size.fromHeight(50),
               ),
-              onPressed: () => FirebaseAuth.instance.signOut(),
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacementNamed('/');
+              } ,
               icon: Icon(Icons.arrow_back, size: 32,),
               label: Text(
                 'Sing out',
@@ -46,6 +50,4 @@ class _MyProfileState extends State<MyProfile> {
       ),
     );
   }
-  
-
 }
