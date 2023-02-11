@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lab3_app/Services/push_notification_service.dart';
 import 'Auth/auth_page.dart';
 import 'Auth/login_widget.dart';
 import 'Auth/utils.dart';
@@ -7,9 +8,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+
+final PushNotificationService _pushNotificationService = PushNotificationService();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  await _pushNotificationService.initialse();
 
   runApp(MyApp());
 }
