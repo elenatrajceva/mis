@@ -4,7 +4,7 @@ import '../Widgets/my_list_tile.dart';
 import '../Model/exam_item.dart';
 import '../Widgets/my_profile.dart';
 import '../Widgets/new_element.dart';
-
+import 'package:lab3_app/Services/push_notification_service.dart';
 import 'package:intl/intl.dart';
 
 class MainScreen extends StatefulWidget {
@@ -13,6 +13,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final PushNotificationService _pushNotificationService = PushNotificationService();
+
   List<ExamItem> _examItems = [
     // ExamItem(
     //     id: "1",
@@ -104,5 +106,14 @@ class _MainScreenState extends State<MainScreen> {
                       _deleteItem);
                 },
               ));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _pushNotificationService.initialse(context);
+
   }
 }

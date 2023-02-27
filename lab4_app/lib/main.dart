@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:lab3_app/Services/push_notification_service.dart';
 import 'Auth/auth_page.dart';
@@ -7,15 +8,17 @@ import 'Screens/main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lab3_app/Screens/calendar_screen.dart';
 
-
-final PushNotificationService _pushNotificationService = PushNotificationService();
+//Background
+Future<void> backgroundHandler(RemoteMessage message) async{
+  print(message.data.toString());
+}
+ 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
-  await _pushNotificationService.initialse();
-
+  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   runApp(MyApp());
 }
 
@@ -37,8 +40,12 @@ class MyApp extends StatelessWidget {
       //   '/calendar':(context) => CalendarScreen(),
       // },
       home: MainPage(),
+      routes: {
+        "calendar":(context) => CalendarScreen(),
+      },
     );
   }
+
 }
 
 class MainPage extends StatelessWidget{
